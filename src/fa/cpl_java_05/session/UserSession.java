@@ -1,25 +1,25 @@
 package fa.cpl_java_05.session;
 
-import fa.cpl_java_05.entities.user.User;
+import fa.cpl_java_05.model.user.UserModel;
 
 public final class UserSession {
 
     private static UserSession instance;
 
-    private static User user;
+    private static UserModel user;
 
-    private UserSession(User user){
+    private UserSession(UserModel user){
         this.user = user;
     }
 
-    public static UserSession setInstance(User user){
+    public static UserSession setInstance(UserModel user){
         if(instance != null){
             instance = new UserSession(user);
         }
         return instance;
     }
 
-    public static User getUser(){
+    public static UserModel getUser(){
         return user;
     }
 

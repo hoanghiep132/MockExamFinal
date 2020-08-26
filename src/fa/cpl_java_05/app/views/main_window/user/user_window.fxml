@@ -7,26 +7,35 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fa.cpl_java_05.app.controller.main_window.user.UserWindowController">
+<AnchorPane prefHeight="720.0" prefWidth="1800.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fa.cpl_java_05.app.controller.main_window.user.UserWindowController">
    <children>
-      <AnchorPane prefHeight="720.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane prefHeight="720.0" prefWidth="1200.0" style="-fx-border-color: black; -fx-border-width: 0px 0px 1px 0px;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <TextField fx:id="searchField" layoutX="14.0" layoutY="46.0" prefHeight="50.0" prefWidth="250.0" promptText="Book's name, author,..." AnchorPane.topAnchor="50.0" />
-            <Button fx:id="searchBtn" layoutX="273.0" layoutY="46.0" mnemonicParsing="false" onAction="#search" prefHeight="50.0" prefWidth="125.0" text="Search" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="50.0" />
-            <Pagination fx:id="pagination" layoutX="22.0" layoutY="125.0" maxPageIndicatorCount="5" pageCount="10" prefHeight="550.0" prefWidth="600.0" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0" />
+            <TextField fx:id="searchField" layoutX="14.0" layoutY="46.0" prefHeight="50.0" prefWidth="400.0" promptText="Book's name, author,..." AnchorPane.topAnchor="80.0" />
+            <Button fx:id="searchBtn" layoutX="273.0" layoutY="46.0" mnemonicParsing="false" onAction="#search" prefHeight="50.0" prefWidth="125.0" text="Search" AnchorPane.leftAnchor="450.0" AnchorPane.topAnchor="80.0" />
+            <Pagination fx:id="pagination" layoutX="22.0" layoutY="125.0" maxPageIndicatorCount="5" pageCount="10" prefHeight="550.0" prefWidth="600.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="150.0" />
+            <Label fx:id="welcomLabel" layoutX="14.0" layoutY="20.0" prefHeight="50.0" prefWidth="400.0" AnchorPane.topAnchor="10.0" />
+            <Button fx:id="myBookCaseBtn" layoutX="800.0" layoutY="21.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="MY BOOK CASE" AnchorPane.topAnchor="20.0" />
+            <Button fx:id="logoutBtn" layoutX="1021.0" layoutY="21.0" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="150.0" text="LOG OUT" AnchorPane.topAnchor="20.0" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="649.0" layoutY="6.0" prefHeight="720.0" prefWidth="680.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="600.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane layoutX="649.0" layoutY="6.0" prefHeight="720.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Button layoutX="524.0" layoutY="27.0" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="100.0" text="LOG OUT" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <AnchorPane layoutY="105.0" prefHeight="550.0" prefWidth="680.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="170.0">
+            <AnchorPane layoutY="105.0" prefHeight="550.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="170.0">
                <children>
-                  <TextArea fx:id="contentArea" layoutX="14.0" layoutY="14.0" prefHeight="550.0" prefWidth="680.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <TextArea fx:id="contentArea" layoutX="14.0" layoutY="14.0" prefHeight="550.0" prefWidth="680.0" AnchorPane.bottomAnchor="90.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <Button layoutX="71.0" layoutY="485.0" mnemonicParsing="false" text="Button" />
                </children></AnchorPane>
-            <Label fx:id="titleLabel" layoutX="14.0" layoutY="20.0" prefHeight="50.0" prefWidth="400.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0" />
-            <Label fx:id="authorLabel" layoutX="20.0" layoutY="115.0" prefHeight="50.0" prefWidth="200.0" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="90.0" />
-            <Label fx:id="publisherLabel" layoutX="270.0" layoutY="115.0" prefHeight="50.0" prefWidth="200.0" AnchorPane.leftAnchor="240.0" AnchorPane.topAnchor="90.0" />
-            <Label fx:id="categoryLabel" layoutX="450.0" layoutY="115.0" prefHeight="50.0" prefWidth="200.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="90.0" />
+            <TextField fx:id="titleField" layoutX="119.0" layoutY="27.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="10.0" />
+            <Label layoutX="25.0" layoutY="20.0" prefHeight="40.0" prefWidth="60.0" text="Title" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+            <TextField fx:id="authorField" layoutX="378.0" layoutY="20.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.topAnchor="10.0" />
+            <Label layoutX="308.0" layoutY="20.0" prefHeight="40.0" prefWidth="60.0" text="Author" AnchorPane.topAnchor="10.0" />
+            <TextField fx:id="catgoField" layoutX="80.0" layoutY="75.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.leftAnchor="80.0" AnchorPane.topAnchor="65.0" />
+            <Label layoutX="10.0" layoutY="75.0" prefHeight="40.0" prefWidth="60.0" text="Category" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="65.0" />
+            <TextField fx:id="pubField" layoutX="378.0" layoutY="84.0" prefHeight="40.0" prefWidth="200.0" AnchorPane.topAnchor="65.0" />
+            <Label layoutX="308.0" layoutY="84.0" prefHeight="40.0" prefWidth="60.0" text="Publisher" AnchorPane.topAnchor="65.0" />
+            <TextField fx:id="briefField" layoutX="84.0" layoutY="124.0" prefHeight="40.0" prefWidth="490.0" AnchorPane.leftAnchor="80.0" />
+            <Label layoutX="14.0" layoutY="124.0" prefHeight="40.0" prefWidth="60.0" text="Brief" AnchorPane.leftAnchor="10.0" />
          </children>
       </AnchorPane>
    </children>

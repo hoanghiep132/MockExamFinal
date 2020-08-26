@@ -1,15 +1,18 @@
 package fa.cpl_java_05.app.controller.main_window.user;
 
-import fa.cpl_java_05.entities.book.Book;
+import fa.cpl_java_05.model.book.BookModel;
 import fa.cpl_java_05.session.UserSession;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -23,9 +26,9 @@ public class UserWindowController implements Serializable, Initializable {
 
     private static final int size = 20;
 
-    private final TableView<Book> tableListBook = createTable();
+    private final TableView<BookModel> tableListBook = createTable();
 
-    private List<Book> data = initData();
+    private List<BookModel> data = initData();
 
     @FXML
     private TextField searchField;
@@ -37,19 +40,31 @@ public class UserWindowController implements Serializable, Initializable {
     private Pagination pagination;
 
     @FXML
+    private Label welcomLabel;
+
+    @FXML
+    private Button myBookCaseBtn;
+
+    @FXML
+    private Button logoutBtn;
+
+    @FXML
     private TextArea contentArea;
 
     @FXML
-    private Label titleLabel;
+    private TextField titleField;
 
     @FXML
-    private Label authorLabel;
+    private TextField authorField;
 
     @FXML
-    private Label publisherLabel;
+    private TextField catgoField;
 
     @FXML
-    private Label categoryLabel;
+    private TextField pubField;
+
+    @FXML
+    private TextField briefField;
 
     @FXML
     void logout(ActionEvent event) {
@@ -58,6 +73,18 @@ public class UserWindowController implements Serializable, Initializable {
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
             UserSession.cleanSession();
+            Parent root;
+            try{
+                Stage stage = new Stage();
+                root = FXMLLoader.load(getClass().getResource("/fa/cpl_java_05/app/views/login/login.fxml"));
+                Scene scene = new Scene(root);
+                stage.setScene(scene);
+                stage.show();
+                ((Node)(event.getSource())).getScene().getWindow().hide();
+            }catch (Exception ex){
+                ex.printStackTrace();
+            }
+
         }else {
             alert.close();
         }
@@ -73,47 +100,73 @@ public class UserWindowController implements Serializable, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        contentArea.setDisable(true);
+        System.out.println(UserSession.getUser());
+        if(!UserSession.getUser().getDeleted()){
+            titleField.setDisable(true);
+            authorField.setDisable(true);
+            pubField.setDisable(true);
+            catgoField.setDisable(true);
+            briefField.setDisable(true);
+            contentArea.setDisable(true);
+        }
         int totalPage = data.size() / 10 ;
         pagination.setPageCount(totalPage);
         pagination.setMaxPageIndicatorCount(3);
         pagination.setPageFactory(this::createPage);
 
         tableListBook.setRowFactory(tv -> {
-            TableRow<Book> row = new TableRow<>();
+            TableRow<BookModel> row = new TableRow<>();
             row.setOnMouseClicked(e -> {
                 if(e.getClickCount() == 1 && (!row.isEmpty())){
-                    Book book = row.getItem();
-                    titleLabel.setText(book.getBookTitle());
-                    authorLabel.setText(book.getAuthor());
-                    publisherLabel.setText(book.getPublisher());
-                    categoryLabel.setText(book.getCategory());
-                    contentArea.setText(book.getContent());
+                    BookModel bookModel = row.getItem();
+                    titleField.setText(bookModel.getBookTitle());
+                    authorField.setText(bookModel.getAuthor());
+                    pubField.setText(bookModel.getPublisher());
+                    catgoField.setText(bookModel.getCategory());
+                    briefField.setText(bookModel.getCategory());
+                    contentArea.setText(bookModel.getContent());
                 }
             });
             return row;
         });
     }
 
-    private TableView<Book> createTable(){
-        TableView<Book> tableView = new TableView<>();
+    private TableView<BookModel> createTable(){
+        TableView<BookModel> tableView = new TableView<>();
         tableView.setPlaceholder(new Label("No data to display"));
-        TableColumn<Book,Integer> idCol = new TableColumn<>("ID");
+
+        TableColumn<BookModel,Integer> sttCol = new TableColumn<>("STT");
+        sttCol.setCellValueFactory(new PropertyValueFactory<>("stt"));
+        sttCol.setPrefWidth(50);
+
+        TableColumn<BookModel,Integer> idCol = new TableColumn<>("ID");
         idCol.setCellValueFactory(new PropertyValueFactory<>("bookId"));
         idCol.setPrefWidth(50);
 
-        TableColumn<Book,String> nameCol = new TableColumn<>("Name");
+        TableColumn<BookModel,String> nameCol = new TableColumn<>("Name");
         nameCol.setCellValueFactory(new PropertyValueFactory<>("bookTitle"));
-        nameCol.setPrefWidth(250);
+        nameCol.setPrefWidth(300);
 
-        TableColumn<Book,String> authorCol = new TableColumn<>("Author");
+        TableColumn<BookModel,String> authorCol = new TableColumn<>("Author");
         authorCol.setCellValueFactory(new PropertyValueFactory<>("author"));
-        authorCol.setPrefWidth(150);
+        authorCol.setPrefWidth(200);
 
-        TableColumn<Book,String> publisherCol = new TableColumn<>("Publisher");
+        TableColumn<BookModel,String> cateCol = new TableColumn<>("Category");
+        cateCol.setCellValueFactory(new PropertyValueFactory<>("category"));
+        cateCol.setPrefWidth(200);
+
+        TableColumn<BookModel,String> briefCol = new TableColumn<>("Brief");
+        briefCol.setCellValueFactory(new PropertyValueFactory<>("brief"));
+        briefCol.setPrefWidth(200);
+
+        TableColumn<BookModel,String> publisherCol = new TableColumn<>("Publisher");
         publisherCol.setCellValueFactory(new PropertyValueFactory<>("publisher"));
-        publisherCol.setPrefWidth(150);
-        tableView.getColumns().addAll(idCol,nameCol,authorCol,publisherCol);
+        publisherCol.setPrefWidth(200);
+        tableView.getColumns().addAll(sttCol,idCol,nameCol,authorCol,cateCol,briefCol,publisherCol);
+
+
+
+
 
         return tableView;
     }
@@ -125,17 +178,17 @@ public class UserWindowController implements Serializable, Initializable {
         return tableListBook;
     }
 
-    private List<Book> initData(){
-        List<Book> list = new ArrayList<>();
+    private List<BookModel> initData(){
+        List<BookModel> list = new ArrayList<>();
         for(int i = 0; i < 50; i++){
-            Book book = new Book();
-            book.setBookId(i+1);
-            book.setBookTitle("Book " +(i+1));
-            book.setAuthor("Author " + (i+1));
-            book.setPublisher("Publisher " + (i+1));
-            book.setCategory("Category " + (i+1));
-            book.setContent("Lorem Ipsum is simply dummy text of the printing and typesetting industry. \nLorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. \nIt has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. \nIt was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
-            list.add(book);
+            BookModel bookModel = new BookModel();
+            bookModel.setBookId(i+1);
+            bookModel.setBookTitle("Book " +(i+1));
+            bookModel.setAuthor("Author " + (i+1));
+            bookModel.setPublisher("Publisher " + (i+1));
+            bookModel.setCategory("Category " + (i+1));
+            bookModel.setContent("Lorem Ipsum is simply dummy text of the printing and typesetting industry. \nLorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. \nIt has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. \nIt was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.");
+            list.add(bookModel);
         }
         return list;
     }
