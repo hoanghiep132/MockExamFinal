@@ -15,6 +15,6 @@ public interface IBookDAO extends GenericDAO<BookModel> {
     List<BookModel> findByBookTitle(String bookTitle);
     List<BookModel> findByCategory(String category);
     int save(BookModel bookModel);
-    void update(BookModel bookModelUpdate);
-    public void delete(int id) throws SQLException;
+    boolean update(BookModel bookModelUpdate);
+    public boolean delete(int id) throws SQLException;
 }

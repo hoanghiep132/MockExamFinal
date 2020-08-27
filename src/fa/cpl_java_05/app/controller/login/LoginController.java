@@ -2,6 +2,7 @@ package fa.cpl_java_05.app.controller.login;
 
 import fa.cpl_java_05.dao.IMPL.UserDAO;
 import fa.cpl_java_05.model.user.UserModel;
+import fa.cpl_java_05.service.user.UserService;
 import fa.cpl_java_05.session.UserSession;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -30,7 +31,7 @@ public class LoginController implements Serializable {
     public void submit(ActionEvent actionEvent){
         String username = usernameTextField.getText();
         String password = passwordField.getText();
-        UserModel userModel = new UserDAO().findByUserNameAndPassWord(username,password);
+        UserModel userModel = new UserService().findByUserNameAndPassWord(username,password);
         if(userModel != null){
             UserSession.setInstance(userModel);
             Parent root;

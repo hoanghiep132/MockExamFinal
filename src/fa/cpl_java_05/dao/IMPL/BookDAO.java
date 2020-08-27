@@ -56,18 +56,27 @@ public class BookDAO extends AbstractDAO<BookModel> implements IBookDAO {
     }
 
     @Override
-    public void update(BookModel bookModelUpdate) {
+    public boolean update(BookModel bookModelUpdate) {
         StringBuilder sql = new StringBuilder("UPDATE Book SET book_title = ?, author = ?,");
         sql.append("brief = ?, publisher = ?, content = ? , category = ?, deleted = ? WHERE book_id = ?");
-        update(sql.toString(), bookModelUpdate.getBookTitle(), bookModelUpdate.getAuthor(), bookModelUpdate.getBrief(), bookModelUpdate.getPublisher()
-                , bookModelUpdate.getContent(), bookModelUpdate.getCategory(), bookModelUpdate.getDelete(), bookModelUpdate.getBookId());
+        try {
+            update(sql.toString(), bookModelUpdate.getBookTitle(), bookModelUpdate.getAuthor(), bookModelUpdate.getBrief(), bookModelUpdate.getPublisher()
+                    , bookModelUpdate.getContent(), bookModelUpdate.getCategory(), bookModelUpdate.getDelete(), bookModelUpdate.getBookId());
+            return true;
+        }catch (Exception ex){
+            return false;
+        }
     }
 
     @Override
-    public void delete(int id) throws SQLException {
-        boolean result = false;
+    public boolean delete(int id) throws SQLException {
         String sql = "update Book set deleted = true where book_id = ?";
-        update(sql, new BookMapper(), id);
+        try{
+            update(sql, new BookMapper(), id);
+            return true;
+        }catch (Exception ex){
+            return false;
+        }
 
     }
 }

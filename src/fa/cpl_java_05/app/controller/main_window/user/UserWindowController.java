@@ -67,12 +67,32 @@ public class UserWindowController implements Serializable, Initializable {
     private TextField briefField;
 
     @FXML
+    void clear(ActionEvent event) {
+
+    }
+
+    @FXML
+    void deleteBook(ActionEvent event) {
+
+    }
+
+    @FXML
+    void editBook(ActionEvent event) {
+
+    }
+
+    @FXML
+    void saveBook(ActionEvent event){
+
+    }
+
+    @FXML
     void logout(ActionEvent event) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText("Are you sure want to log out?");
         Optional<ButtonType> result = alert.showAndWait();
         if (result.get() == ButtonType.OK) {
-            UserSession.cleanSession();
+            UserSession.getInstance().cleanSession();
             Parent root;
             try{
                 Stage stage = new Stage();
@@ -100,14 +120,16 @@ public class UserWindowController implements Serializable, Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println(UserSession.getUser());
-        if(!UserSession.getUser().getDeleted()){
+        if(!UserSession.getInstance().getUser().getDeleted()){
             titleField.setDisable(true);
             authorField.setDisable(true);
             pubField.setDisable(true);
             catgoField.setDisable(true);
             briefField.setDisable(true);
             contentArea.setDisable(true);
+            welcomLabel.setText("Welcome " + UserSession.getInstance().getUser().getUsername().toUpperCase());
+        }else{
+            welcomLabel.setText("Welcome ADMIN");
         }
         int totalPage = data.size() / 10 ;
         pagination.setPageCount(totalPage);
