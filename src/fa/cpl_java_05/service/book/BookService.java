@@ -3,14 +3,16 @@ package fa.cpl_java_05.service.book;
 import fa.cpl_java_05.dao.IMPL.BookDAO;
 import fa.cpl_java_05.model.book.BookModel;
 
-import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 public class BookService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(BookService.class);
+    private static final Logger LOGGER = java.util.logging.Logger.getLogger(BookService.class.getName());
 
     private BookDAO bookDAO;
 
@@ -22,7 +24,7 @@ public class BookService {
         try {
             return bookDAO.findBookAll();
         } catch (Exception ex) {
-            LOGGER.error("find-all-book-error : " + ex);
+            LOGGER.log(Level.SEVERE,"find-all-book-error : " + ex);
             return null;
         }
     }

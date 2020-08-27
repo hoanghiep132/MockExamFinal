@@ -3,10 +3,12 @@ package fa.cpl_java_05.dao.IMPL;
 
 import fa.cpl_java_05.dao.IBookDAO;
 import fa.cpl_java_05.dao.IMPL.AbstractDAO;
+import fa.cpl_java_05.dao.jdbc.GetConnection;
 import fa.cpl_java_05.mapper.BookMapper;
 import fa.cpl_java_05.model.book.BookModel;
 
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,7 +18,7 @@ public class BookDAO extends AbstractDAO<BookModel> implements IBookDAO {
 
     @Override
     public List<BookModel> findBookAll() {
-        String sql="SELECT * FROM BookCase WHERE deleted = false";
+        String sql="SELECT * FROM Book WHERE deleted = false";
         return query(sql, new BookMapper());
     }
 
@@ -34,12 +36,36 @@ public class BookDAO extends AbstractDAO<BookModel> implements IBookDAO {
 
     public List<BookModel> search(String text){
         String sql = "select * from Book where deleted = false " +
-                "and (upper(book_title)  LIKE upper(concat('%',?,'%,) " +
-                "or upper(author)  LIKE upper(concat('%',?,'%,) " +
-                "or upper(publisher)  LIKE upper(concat('%',?,'%,) " +
-                "or upper(brief)  LIKE upper(concat('%',?,'%,) " +
+                "and (" +
+                " upper(book_title) like upper(concat('%','" + text + "','%')) " +
+                " or upper(author) like  upper(concat('%','" + text + "','%')) " +
+                " or upper(publisher) like  upper(concat('%','" + text + "','%')) " +
+                " or upper(brief) like upper(concat('%','" + text + "','%')) " +
+                " or upper(category) like upper(concat('%','" + text + "','%')) " +
                 ")";
-        return query(sql,new BookMapper(), text);
+        Connection con = GetConnection.getConnection();
+        Statement ps = null;
+        List<BookModel> list = new ArrayList<>();
+        try {
+            ps = con.createStatement();
+            ResultSet rs = ps.executeQuery(sql);
+            while(rs.next()){
+                BookModel bookModel = new BookModel();
+                bookModel.setBookId(rs.getInt("book_id"));
+                bookModel.setBookTitle(rs.getString("book_title"));
+                bookModel.setAuthor(rs.getString("author"));
+                bookModel.setPublisher(rs.getString("publisher"));
+                bookModel.setCategory(rs.getString("category"));
+                bookModel.setContent(rs.getString("content"));
+                bookModel.setBrief(rs.getString("brief"));
+                bookModel.setDelete(rs.getBoolean("deleted"));
+                list.add(bookModel);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return list;
+//        return query(sql,new BookMapper(), text);
     }
 
     @Override

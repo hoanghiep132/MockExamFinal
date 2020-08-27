@@ -151,6 +151,8 @@ public class AbstractDAO<T> implements GenericDAO<T> {
                     statement.setInt(index, (Integer) parameter);
                 } else if (parameter instanceof Date) {
                     statement.setDate(index, (java.sql.Date) parameter);
+                }else if(parameter instanceof Boolean){
+                    statement.setBoolean(index,(Boolean) parameter);
                 }
             }
         } catch (SQLException e) {
