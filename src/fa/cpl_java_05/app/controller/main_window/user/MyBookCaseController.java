@@ -175,6 +175,7 @@ public class MyBookCaseController implements Serializable, Initializable {
         String name = new BookCaseService().findByUserId(idUser).getBook_case_name();
         welcomfield.setText(name);
         welcomfield.setDisable(true);
+        welcomfield.setStyle("-fx-opacity: 1;");
         data = initData("");
         removeBtn.setDisable(true);
         titleField.setDisable(true);
@@ -189,6 +190,11 @@ public class MyBookCaseController implements Serializable, Initializable {
         briefField.setStyle("-fx-opacity: 1;");
         contentArea.setDisable(true);
         contentArea.setStyle("-fx-opacity: 1;");
+        contentArea.setTextFormatter(new TextFormatter<String>(change ->  {
+            change.setAnchor(change.getCaretPosition());
+            return change ;
+        }));
+
 
         int totalPage = data.size() / 20 ;
         pagination.setPageCount(totalPage);
@@ -205,7 +211,7 @@ public class MyBookCaseController implements Serializable, Initializable {
                     authorField.setText(bookModel.getAuthor());
                     pubField.setText(bookModel.getPublisher());
                     catgoField.setText(bookModel.getCategory());
-                    briefField.setText(bookModel.getCategory());
+                    briefField.setText(bookModel.getBrief());
                     contentArea.setText(bookModel.getContent());
                 }
             });

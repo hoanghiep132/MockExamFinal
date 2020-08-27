@@ -117,13 +117,18 @@ public class UserWindowController implements Serializable, Initializable {
         if(currentId == 0){
             AlertBox.display("Notification","You must choose a book!");
         }else{
-            Boolean bool = new BookService().deleted(currentId);
-            if(bool){
-                currentId = 0;
-                AlertBox.display("Notification", "This book is deleted");
-            }else{
-                AlertBox.display("Warning", "This book can't deleted");
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setHeaderText("Are you sure want to delete this book?");
+            Optional<ButtonType> result = alert.showAndWait();
+            if(result.get() == ButtonType.OK){
+                Boolean bool = new BookService().deleted(currentId);
+                if(bool){
+                    currentId = 0;
+                    AlertBox.display("Notification", "This book is deleted");
+                }else{
+                    AlertBox.display("Warning", "This book can't deleted");
 
+                }
             }
         }
     }
@@ -244,13 +249,12 @@ public class UserWindowController implements Serializable, Initializable {
                 if(e.getClickCount() == 1 && (!row.isEmpty())){
                     BookModel bookModel = row.getItem();
                     currentId = bookModel.getBookId();
-                    System.out.println(currentId);
                     saveBtn.setDisable(false);
                     titleField.setText(bookModel.getBookTitle());
                     authorField.setText(bookModel.getAuthor());
                     pubField.setText(bookModel.getPublisher());
                     catgoField.setText(bookModel.getCategory());
-                    briefField.setText(bookModel.getCategory());
+                    briefField.setText(bookModel.getBrief());
                     contentArea.setText(bookModel.getContent());
                 }
             });

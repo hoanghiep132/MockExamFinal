@@ -159,4 +159,13 @@ public class AbstractDAO<T> implements GenericDAO<T> {
         } catch (SQLException e) {
         }
     }
+
+    public PreparedStatement preparedUpdate(String sql){
+        try{
+            return getConnectionJDBC().prepareStatement(sql,Statement.RETURN_GENERATED_KEYS);
+        }catch (SQLException ex){
+            ex.printStackTrace();
+            return null;
+        }
+    }
 }

@@ -97,12 +97,10 @@ public class BookDAO extends AbstractDAO<BookModel> implements IBookDAO {
     @Override
     public boolean delete(int id) throws SQLException {
         String sql = "update Book set deleted = 1 where book_id = ?";
-        try{
-            update(sql, new BookMapper(), id);
-            return true;
-        }catch (Exception ex){
-            return false;
-        }
+        PreparedStatement ps = getConnectionJDBC().prepareStatement(sql);
+        ps.setInt(1,id);
+        int rs = ps.executeUpdate();
+        return rs > 0 ? true : false;
 
     }
 }
