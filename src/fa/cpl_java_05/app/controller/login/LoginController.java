@@ -1,6 +1,7 @@
 package fa.cpl_java_05.app.controller.login;
 
 import fa.cpl_java_05.app.main.Main;
+import fa.cpl_java_05.app.views.common.AlertBox;
 import fa.cpl_java_05.dao.IMPL.UserDAO;
 import fa.cpl_java_05.model.user.UserModel;
 import fa.cpl_java_05.service.user.UserService;
@@ -54,6 +55,8 @@ public class LoginController implements Serializable {
             catch (IOException e) {
                 e.printStackTrace();
             }
+        }else {
+            AlertBox.display("Warning","Incorrect username or password");
         }
     }
 }
