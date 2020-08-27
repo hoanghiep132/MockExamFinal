@@ -15,7 +15,7 @@
             <Button fx:id="searchBtn" layoutX="273.0" layoutY="46.0" mnemonicParsing="false" onAction="#search" prefHeight="50.0" prefWidth="125.0" text="Search" AnchorPane.leftAnchor="450.0" AnchorPane.topAnchor="80.0" />
             <Pagination fx:id="pagination" layoutX="22.0" layoutY="125.0" maxPageIndicatorCount="5" pageCount="10" prefHeight="550.0" prefWidth="600.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="150.0" />
             <Label fx:id="welcomLabel" layoutX="14.0" layoutY="20.0" prefHeight="50.0" prefWidth="400.0" AnchorPane.topAnchor="10.0" />
-            <Button fx:id="myBookCaseBtn" layoutX="800.0" layoutY="21.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="150.0" text="MY BOOK CASE" AnchorPane.topAnchor="20.0" />
+            <Button fx:id="myBookCaseBtn" layoutX="800.0" layoutY="21.0" mnemonicParsing="false" onAction="#openBookCase" prefHeight="50.0" prefWidth="150.0" text="MY BOOK CASE" AnchorPane.topAnchor="20.0" />
             <Button fx:id="logoutBtn" layoutX="1021.0" layoutY="21.0" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="150.0" text="LOG OUT" AnchorPane.topAnchor="20.0" />
          </children>
       </AnchorPane>

@@ -1,6 +1,7 @@
 package fa.cpl_java_05.model.book;
 
 public class BookModel {
+    private int stt;
     private Integer bookId;
     private String bookTitle;
     private String author;
@@ -89,5 +90,13 @@ public class BookModel {
 
     public void setDelete(Boolean delete) {
         this.delete = delete;
+    }
+
+    public int getStt() {
+        return stt;
+    }
+
+    public void setStt(int stt) {
+        this.stt = stt;
     }
 }

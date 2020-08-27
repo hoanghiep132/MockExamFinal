@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface IBookCaseDAO extends GenericDAO<BookCaseModel> {
     int add(BookCaseModel bookCaseModelModel);
-    void update(BookCaseModel bookCaseModelUpdate);
+    void update(int id, String name);
     public void delete(int id) throws SQLException;
     List<BookCaseModel> findBookAll();
     List<BookCaseModel> findById(int id);

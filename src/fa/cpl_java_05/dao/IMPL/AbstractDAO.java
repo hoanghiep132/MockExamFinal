@@ -6,6 +6,7 @@ import fa.cpl_java_05.mapper.RowMapper;
 
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -135,7 +136,7 @@ public class AbstractDAO<T> implements GenericDAO<T> {
                 e2.printStackTrace();
             }
         }
-       return 0;
+       return -1;
     }
 
     private void setParameter(PreparedStatement statement, Object... parameters) {

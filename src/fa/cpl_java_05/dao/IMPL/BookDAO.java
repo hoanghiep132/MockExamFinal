@@ -84,10 +84,10 @@ public class BookDAO extends AbstractDAO<BookModel> implements IBookDAO {
     @Override
     public boolean update(BookModel bookModelUpdate) {
         StringBuilder sql = new StringBuilder("UPDATE Book SET book_title = ?, author = ?,");
-        sql.append("brief = ?, publisher = ?, content = ? , category = ?, deleted = ? WHERE book_id = ?");
+        sql.append("brief = ?, publisher = ?, content = ? , category = ? WHERE book_id = ?");
         try {
             update(sql.toString(), bookModelUpdate.getBookTitle(), bookModelUpdate.getAuthor(), bookModelUpdate.getBrief(), bookModelUpdate.getPublisher()
-                    , bookModelUpdate.getContent(), bookModelUpdate.getCategory(), bookModelUpdate.getDelete(), bookModelUpdate.getBookId());
+                    , bookModelUpdate.getContent(), bookModelUpdate.getCategory(), bookModelUpdate.getBookId());
             return true;
         }catch (Exception ex){
             return false;
@@ -96,7 +96,7 @@ public class BookDAO extends AbstractDAO<BookModel> implements IBookDAO {
 
     @Override
     public boolean delete(int id) throws SQLException {
-        String sql = "update Book set deleted = true where book_id = ?";
+        String sql = "update Book set deleted = 1 where book_id = ?";
         try{
             update(sql, new BookMapper(), id);
             return true;

@@ -3,19 +3,16 @@ package fa.cpl_java_05.dao.init_data;
 
 
 import com.google.gson.*;
-import fa.cpl_java_05.dao.IMPL.BookDAO;
+import fa.cpl_java_05.dao.IMPL.ContainDAO;
 import fa.cpl_java_05.model.book.BookModel;
-import fa.cpl_java_05.model.user.UserModel;
 import fa.cpl_java_05.service.book.BookService;
-import fa.cpl_java_05.service.user.UserService;
-
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.Random;
 
 public class BookData {
@@ -52,11 +49,9 @@ public class BookData {
 
     public void getDataFromOtherSourceInJsonType(){
         JsonParser jsonParser = new JsonParser();
-        JsonArray bookList = null;
+        JsonArray bookList;
 
-        try (FileReader reader = new FileReader("data.json"))
-        {
-
+        try (FileReader reader = new FileReader("data.json")) {
             Object obj = jsonParser.parse(reader);
 
             bookList = (JsonArray) obj;
@@ -91,6 +86,5 @@ public class BookData {
     }
 
     public static void main(String[] args) {
-        new BookData().getDataFromOtherSourceInJsonType();
     }
 }

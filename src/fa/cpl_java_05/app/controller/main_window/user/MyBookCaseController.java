@@ -2,10 +2,9 @@ package fa.cpl_java_05.app.controller.main_window.user;
 
 import fa.cpl_java_05.app.main.Main;
 import fa.cpl_java_05.app.views.common.AlertBox;
+import fa.cpl_java_05.model.book.BookCaseModel;
 import fa.cpl_java_05.model.book.BookModel;
-import fa.cpl_java_05.model.book.ContainModel;
 import fa.cpl_java_05.service.book.BookCaseService;
-import fa.cpl_java_05.service.book.BookService;
 import fa.cpl_java_05.service.book.ContainService;
 import fa.cpl_java_05.session.UserSession;
 import javafx.collections.FXCollections;
@@ -18,23 +17,18 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 
 import java.io.Serializable;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.*;
-import java.util.stream.Collector;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-public class UserWindowController implements Serializable, Initializable {
+public class MyBookCaseController implements Serializable, Initializable {
 
+    private boolean editBool = true;
 
     private static final int size = 20;
 
@@ -42,30 +36,18 @@ public class UserWindowController implements Serializable, Initializable {
 
     private final TableView<BookModel> tableListBook = createTable();
 
+    private int idUser = 0;
+
     private List<BookModel> data;
 
     @FXML
     private TextField searchField;
 
-
     @FXML
     private Pagination pagination;
 
     @FXML
-    private Label welcomLabel;
-
-    @FXML
-    private Button myBookCaseBtn;
-
-
-    @FXML
-    private Button saveBtn;
-
-    @FXML
-    private Button deleteBtn;
-
-    @FXML
-    private Button clearBtn;
+    private TextField welcomfield;
 
     @FXML
     private TextArea contentArea;
@@ -85,13 +67,37 @@ public class UserWindowController implements Serializable, Initializable {
     @FXML
     private TextField briefField;
 
+    @FXML
+    private Button removeBtn;
 
 
     @FXML
-    void openBookCase(ActionEvent event){
+    private Button editBtn;
+
+
+    @FXML
+    void edit(ActionEvent event) {
+        if(editBool){
+            welcomfield.setDisable(false);
+            editBtn.setText("Save");
+            editBool = false;
+        }else {
+            String str = welcomfield.getText();
+            BookCaseModel bookCase = new BookCaseService().findByUserId(idUser);
+            Boolean bool = new BookCaseService().update(bookCase.getBook_case_id(),str);
+            if(!bool){
+                welcomfield.setText(bookCase.getBook_case_name());
+            }
+            welcomfield.setDisable(true);
+            editBtn.setText("Edit");
+        }
+    }
+
+    @FXML
+    void back(ActionEvent event) {
         Parent root;
         try{
-            root = FXMLLoader.load(getClass().getResource("/fa/cpl_java_05/app/views/main_window/user/my_book_case/my_book_case.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fa/cpl_java_05/app/views/main_window/user/user_window.fxml"));
             Scene scene = new Scene(root);
             Main.mainStage.close();
             Main.mainStage.setScene(scene);
@@ -99,77 +105,6 @@ public class UserWindowController implements Serializable, Initializable {
         }catch (Exception ex){
             ex.printStackTrace();
         }
-    }
-
-    @FXML
-    void clear(ActionEvent event) {
-        currentId = 0;
-        titleField.setText("");
-        authorField.setText("");
-        pubField.setText("");
-        briefField.setText("");
-        catgoField.setText("");
-        contentArea.setText("");
-    }
-
-    @FXML
-    void deleteBook(ActionEvent event) {
-        if(currentId == 0){
-            AlertBox.display("Notification","You must choose a book!");
-        }else{
-            Boolean bool = new BookService().deleted(currentId);
-            if(bool){
-                currentId = 0;
-                AlertBox.display("Notification", "This book is deleted");
-            }else{
-                AlertBox.display("Warning", "This book can't deleted");
-
-            }
-        }
-    }
-
-
-    @FXML
-    void saveBook(ActionEvent event){
-       if(UserSession.getInstance().getUser().getRole()){
-           BookModel bookModel = new BookModel();
-           bookModel.setBookTitle(titleField.getText());
-           bookModel.setAuthor(authorField.getText());
-           bookModel.setPublisher(pubField.getText());
-           bookModel.setCategory(catgoField.getText());
-           bookModel.setBrief(briefField.getText());
-           bookModel.setContent(contentArea.getText());
-           if(currentId != 0){
-               bookModel.setBookId(currentId);
-               Boolean bool = new BookService().update(bookModel);
-               if(bool){
-                   AlertBox.display("Notification", "This book is updated");
-               }else {
-                   AlertBox.display("Warning", "Upload is not succeed");
-               }
-           }else{
-               Boolean bool = new BookService().save(bookModel);
-               if(bool){
-                   AlertBox.display("Notification", "This book is uploaded");
-               }else {
-                   AlertBox.display("Warning", "Update is not succeed");
-               }
-           }
-       }else {
-           int userId = UserSession.getInstance().getUser().getId();
-           int bookCaseID = new BookCaseService().findByUserId(userId).getBook_case_id();
-           System.out.printf(bookCaseID + ", " + userId);
-           int bookId = currentId;
-           Boolean bool = new ContainService().save(bookCaseID,bookId,new java.sql.Date(new Date().getTime()));
-           if(bool){
-               AlertBox.display("Success","This book is added to your book case");
-           }else if(bool == null){
-               AlertBox.display("Danger", "Server Internal Error");
-           }else {
-               AlertBox.display("Warning", "This book is exist in book case");
-
-           }
-       }
     }
 
     @FXML
@@ -196,56 +131,76 @@ public class UserWindowController implements Serializable, Initializable {
     }
 
     @FXML
+    void removeBook(ActionEvent event) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText("Are you sure want to remove this book to your book case?");
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK) {
+            int id = UserSession.getInstance().getUser().getId();
+            int bookCaseId = new BookCaseService().findByUserId(id).getBook_case_id();
+            Boolean bool = new ContainService().deleted(bookCaseId,currentId);
+            if(bool){
+                AlertBox.display("Success","This book is removed to your book case");
+                data.clear();
+                data = initData("");
+                int totalPage = data.size() / 20 ;
+                totalPage += totalPage%20 == 0 ? 0 : 1;
+                pagination.setPageCount(totalPage == 0 ? 1 : totalPage);
+                pagination.setMaxPageIndicatorCount(3);
+                pagination.setPageFactory(this::createPage);
+            }else {
+                AlertBox.display("Warning","Can't remove this book!");
+            }
+        }else {
+            alert.close();
+        }
+
+    }
+
+    @FXML
     void search(ActionEvent event) {
         data.clear();
         String text = searchField.getText();
         data = initData(text);
         int totalPage = data.size() / 20 ;
-        totalPage += totalPage%20 == 0 ? 0 : 1;
         pagination.setPageCount(totalPage);
         pagination.setMaxPageIndicatorCount(3);
         pagination.setPageFactory(this::createPage);
     }
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        idUser = UserSession.getInstance().getUser().getId();
+        String name = new BookCaseService().findByUserId(idUser).getBook_case_name();
+        welcomfield.setText(name);
+        welcomfield.setDisable(true);
         data = initData("");
-        if(!UserSession.getInstance().getUser().getRole()){
-            titleField.setDisable(true);
-            titleField.setStyle("-fx-opacity: 1;");
-            authorField.setDisable(true);
-            authorField.setStyle("-fx-opacity: 1;");
-            pubField.setDisable(true);
-            pubField.setStyle("-fx-opacity: 1;");
-            catgoField.setDisable(true);
-            catgoField.setStyle("-fx-opacity: 1;");
-            briefField.setDisable(true);
-            briefField.setStyle("-fx-opacity: 1;");
-            contentArea.setDisable(true);
-            contentArea.setStyle("-fx-opacity: 1;");
-            saveBtn.setText("ADD");
-            saveBtn.setDisable(true);
-            deleteBtn.setVisible(false);
-            clearBtn.setVisible(false);
-            welcomLabel.setText("Welcome " + UserSession.getInstance().getUser().getUsername().toUpperCase());
-        }else{
-            welcomLabel.setText("Welcome ADMIN");
-            myBookCaseBtn.setVisible(false);
-        }
+        removeBtn.setDisable(true);
+        titleField.setDisable(true);
+        titleField.setStyle("-fx-opacity: 1;");
+        authorField.setDisable(true);
+        authorField.setStyle("-fx-opacity: 1;");
+        pubField.setDisable(true);
+        pubField.setStyle("-fx-opacity: 1;");
+        catgoField.setDisable(true);
+        catgoField.setStyle("-fx-opacity: 1;");
+        briefField.setDisable(true);
+        briefField.setStyle("-fx-opacity: 1;");
+        contentArea.setDisable(true);
+        contentArea.setStyle("-fx-opacity: 1;");
+
         int totalPage = data.size() / 20 ;
-        totalPage += totalPage%20 == 0 ? 0 : 1;
         pagination.setPageCount(totalPage);
         pagination.setMaxPageIndicatorCount(3);
         pagination.setPageFactory(this::createPage);
-
         tableListBook.setRowFactory(tv -> {
             TableRow<BookModel> row = new TableRow<>();
             row.setOnMouseClicked(e -> {
                 if(e.getClickCount() == 1 && (!row.isEmpty())){
                     BookModel bookModel = row.getItem();
                     currentId = bookModel.getBookId();
-                    System.out.println(currentId);
-                    saveBtn.setDisable(false);
+                    removeBtn.setDisable(false);
                     titleField.setText(bookModel.getBookTitle());
                     authorField.setText(bookModel.getAuthor());
                     pubField.setText(bookModel.getPublisher());
@@ -304,10 +259,11 @@ public class UserWindowController implements Serializable, Initializable {
 
     private List<BookModel> initData(String text){
         List<BookModel> list;
+        int bookCaseId = new BookCaseService().findByUserId(idUser).getBook_case_id();
         if("".equals(text)){
-            list = new BookService().findBookAll();
+            list = new ContainService().findByBookCaseId(bookCaseId);
         }else {
-            list = new BookService().search(text);
+            list = new ContainService().search(bookCaseId,text);
         }
         return convertToRowModel(list);
     }
@@ -321,6 +277,5 @@ public class UserWindowController implements Serializable, Initializable {
                 }).collect(Collectors.toList());
         return list;
     }
-
 
 }

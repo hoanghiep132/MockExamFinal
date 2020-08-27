@@ -19,9 +19,9 @@ public class BookCaseDAO extends AbstractDAO<BookCaseModel> implements IBookCase
     }
 
     @Override
-    public void update(BookCaseModel bookCaseModelUpdate) {
+    public void update(int id, String name) {
         String sql = "UPDATE BookCase SET book_case_name = ? WHERE book_case_id = ?";
-        update(sql, bookCaseModelUpdate.getBook_case_name());
+        update(sql, name,id);
     }
 
     @Override
@@ -46,6 +46,11 @@ public class BookCaseDAO extends AbstractDAO<BookCaseModel> implements IBookCase
     public List<BookCaseModel> findByBookCaseName(String bookCaseName) {
         String sql = "SELECT * FROM BookCase WHERE upper(book_case_name) LIKE upper(concat('%',?,'%,)) AND deleted = false";
         return query(sql, new BookCaseMapper(), bookCaseName);
+    }
+
+    public BookCaseModel findByUserId(int id){
+        String sql = "select *  from BookCase where user_id = ?";
+        return query(sql,new BookCaseMapper(), id).get(0);
     }
 }
 

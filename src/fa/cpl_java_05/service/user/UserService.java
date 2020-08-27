@@ -11,7 +11,7 @@ public class UserService {
 
     private static final Logger LOGGER = Logger.getLogger(UserService.class.getName());
 
-    private UserDAO userDAO;
+    private final UserDAO userDAO;
 
     public UserService() {
         userDAO = new UserDAO();

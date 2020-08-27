@@ -33,6 +33,6 @@ public final class UserSession {
     }
 
     public  void cleanSession(){
-        user = null;
+        instance = null;
     }
 }

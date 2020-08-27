@@ -1,5 +1,6 @@
 package fa.cpl_java_05.app.controller.login;
 
+import fa.cpl_java_05.app.main.Main;
 import fa.cpl_java_05.dao.IMPL.UserDAO;
 import fa.cpl_java_05.model.user.UserModel;
 import fa.cpl_java_05.service.user.UserService;
@@ -26,6 +27,11 @@ public class LoginController implements Serializable {
     @FXML
     private PasswordField passwordField;
 
+    @FXML
+    public void cancel(ActionEvent event){
+        ((Stage)(((Button)event.getSource()).getScene().getWindow())).close();
+    }
+
 
     @FXML
     public void submit(ActionEvent actionEvent){
@@ -37,13 +43,13 @@ public class LoginController implements Serializable {
             Parent root;
             try {
                 root =  FXMLLoader.load(getClass().getResource("/fa/cpl_java_05/app/views/main_window/user/user_window.fxml"));
-                Stage stage = new Stage();
                 Scene scene = new Scene(root);
-                stage.setScene(scene);
-                stage.show();
+                Main.mainStage.close();
+                Main.mainStage.setScene(scene);
+                Main.mainStage.show();
 
                 // Hide this current window (if this is what you want)
-                ((Node)(actionEvent.getSource())).getScene().getWindow().hide();
+                //((Node)(actionEvent.getSource())).getScene().getWindow().hide();
             }
             catch (IOException e) {
                 e.printStackTrace();

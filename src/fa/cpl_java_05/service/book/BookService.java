@@ -14,7 +14,7 @@ public class BookService {
 
     private static final Logger LOGGER = java.util.logging.Logger.getLogger(BookService.class.getName());
 
-    private BookDAO bookDAO;
+    private final BookDAO bookDAO;
 
     public BookService() {
         bookDAO = new BookDAO();
@@ -33,6 +33,7 @@ public class BookService {
         try{
             return bookDAO.findById(id).get(0);
         }catch (Exception ex){
+            LOGGER.log(Level.SEVERE,"find-by-id-book-error : " + ex);
             return null;
         }
     }
@@ -41,6 +42,7 @@ public class BookService {
         try{
             return bookDAO.search(text);
         }catch (Exception ex){
+            LOGGER.log(Level.SEVERE,"search-book-error : " + ex);
             return null;
         }
     }
@@ -50,6 +52,7 @@ public class BookService {
             bookDAO.save(bookModel);
             return true;
         }catch (Exception ex){
+            LOGGER.log(Level.SEVERE,"save-book-error : " + ex);
             return false;
         }
     }
@@ -58,6 +61,7 @@ public class BookService {
         try{
             return bookDAO.update(bookModel);
         }catch (Exception ex){
+            LOGGER.log(Level.SEVERE,"update-book-error : " + ex);
             return false;
         }
     }
@@ -66,6 +70,7 @@ public class BookService {
         try{
             return bookDAO.delete(id);
         }catch(Exception ex){
+            LOGGER.log(Level.SEVERE,"delete-book-error : " + ex);
             return false;
         }
     }
