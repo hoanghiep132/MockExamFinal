@@ -22,6 +22,12 @@ public class BookDAO extends AbstractDAO<BookModel> implements IBookDAO {
         return query(sql, new BookMapper());
     }
 
+    public List<BookModel> findBookAllDeleted() {
+        String sql="SELECT * FROM Book WHERE deleted = true";
+        return query(sql, new BookMapper());
+    }
+
+
     @Override
     public List<BookModel> findById(int id) {
         String sql = "SELECT * FROM Book WHERE book_id=? and deleted = false";
@@ -36,6 +42,41 @@ public class BookDAO extends AbstractDAO<BookModel> implements IBookDAO {
 
     public List<BookModel> search(String text){
         String sql = "select * from Book where deleted = false " +
+                "and (" +
+                " upper(book_title) like upper(concat('%','" + text + "','%')) " +
+                " or upper(author) like  upper(concat('%','" + text + "','%')) " +
+                " or upper(publisher) like  upper(concat('%','" + text + "','%')) " +
+                " or upper(brief) like upper(concat('%','" + text + "','%')) " +
+                " or upper(category) like upper(concat('%','" + text + "','%')) " +
+                ")";
+        Connection con = GetConnection.getConnection();
+        Statement ps = null;
+        List<BookModel> list = new ArrayList<>();
+        try {
+            ps = con.createStatement();
+            ResultSet rs = ps.executeQuery(sql);
+            while(rs.next()){
+                BookModel bookModel = new BookModel();
+                bookModel.setBookId(rs.getInt("book_id"));
+                bookModel.setBookTitle(rs.getString("book_title"));
+                bookModel.setAuthor(rs.getString("author"));
+                bookModel.setPublisher(rs.getString("publisher"));
+                bookModel.setCategory(rs.getString("category"));
+                bookModel.setContent(rs.getString("content"));
+                bookModel.setBrief(rs.getString("brief"));
+                bookModel.setDelete(rs.getBoolean("deleted"));
+                list.add(bookModel);
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return list;
+//        return query(sql,new BookMapper(), text);
+    }
+
+
+    public List<BookModel> searchBookDeleted(String text){
+        String sql = "select * from Book where deleted = true " +
                 "and (" +
                 " upper(book_title) like upper(concat('%','" + text + "','%')) " +
                 " or upper(author) like  upper(concat('%','" + text + "','%')) " +

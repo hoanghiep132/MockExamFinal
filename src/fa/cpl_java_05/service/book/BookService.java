@@ -29,6 +29,15 @@ public class BookService {
         }
     }
 
+    public List<BookModel> findBookAllDeleted() {
+        try {
+            return bookDAO.findBookAllDeleted();
+        } catch (Exception ex) {
+            LOGGER.log(Level.SEVERE,"find-all-book-error : " + ex);
+            return null;
+        }
+    }
+
     public BookModel findById(int id){
         try{
             return bookDAO.findById(id).get(0);
@@ -41,6 +50,15 @@ public class BookService {
     public List<BookModel> search(String text){
         try{
             return bookDAO.search(text);
+        }catch (Exception ex){
+            LOGGER.log(Level.SEVERE,"search-book-error : " + ex);
+            return null;
+        }
+    }
+
+    public List<BookModel> searchBookDeleted(String text){
+        try{
+            return bookDAO.searchBookDeleted(text);
         }catch (Exception ex){
             LOGGER.log(Level.SEVERE,"search-book-error : " + ex);
             return null;

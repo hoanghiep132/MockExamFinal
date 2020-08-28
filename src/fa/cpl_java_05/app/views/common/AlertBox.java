@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -15,16 +16,19 @@ public class AlertBox {
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
-        window.setMinWidth(500);
-        window.setMinHeight(200);
+        window.setHeight(200);
+        window.setWidth(500);
 
         Label label = new Label();
         label.setText(message);
+        label.setFont(new Font("Arial", 22));
 
-        Button btn = new Button("Ok");
+        Button btn = new Button("OK");
         btn.setOnAction(e -> window.close());
+        btn.setPrefWidth(80);
+        btn.setPrefHeight(40);
 
-        VBox vbox = new VBox(10);
+        VBox vbox = new VBox(40);
         vbox.getChildren().addAll(label,btn);
         vbox.setAlignment(Pos.CENTER);
 

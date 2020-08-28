@@ -22,14 +22,7 @@ import javafx.stage.Stage;
 
 import java.io.Serializable;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -39,6 +32,8 @@ public class UserWindowController implements Serializable, Initializable {
     private static final int size = 20;
 
     private int currentId = 0;
+
+    private Boolean deletedBool = false;
 
     private final TableView<BookModel> tableListBook = createTable();
 
@@ -85,6 +80,10 @@ public class UserWindowController implements Serializable, Initializable {
     @FXML
     private TextField briefField;
 
+    @FXML
+    private ComboBox<String> choiceCombobox;
+
+
 
 
     @FXML
@@ -125,12 +124,58 @@ public class UserWindowController implements Serializable, Initializable {
                 if(bool){
                     currentId = 0;
                     AlertBox.display("Notification", "This book is deleted");
+                    data.clear();
+                    String text = searchField.getText();
+                    data = initData(text);
+                    int totalPage = data.size() / 20 ;
+                    totalPage += totalPage%20 == 0 ? 0 : 1;
+                    pagination.setPageCount(totalPage==0?1:totalPage);
+                    pagination.setMaxPageIndicatorCount(totalPage < 3 ? totalPage+1 : 3);
+                    pagination.setPageFactory(this::createPage);
                 }else{
                     AlertBox.display("Warning", "This book can't deleted");
 
                 }
+            }else{
+                alert.close();
             }
         }
+    }
+
+    @FXML
+    void choice(ActionEvent event){
+        String value = choiceCombobox.getValue();
+        if(value.equals("Deleted")){
+            deletedBool = true;
+            deleteBtn.setDisable(true);
+            saveBtn.setDisable(true);
+            clearBtn.setDisable(true);
+            titleField.setDisable(true);
+            titleField.setStyle("-fx-opacity: 1;");
+            authorField.setDisable(true);
+            authorField.setStyle("-fx-opacity: 1;");
+            pubField.setDisable(true);
+            pubField.setStyle("-fx-opacity: 1;");
+            catgoField.setDisable(true);
+            catgoField.setStyle("-fx-opacity: 1;");
+            briefField.setDisable(true);
+            briefField.setStyle("-fx-opacity: 1;");
+            contentArea.setDisable(true);
+            contentArea.setStyle("-fx-opacity: 1;");
+        }else {
+            deletedBool = false;
+            deleteBtn.setDisable(false);
+            saveBtn.setDisable(false);
+            clearBtn.setDisable(false);
+        }
+        data.clear();
+        String text = searchField.getText();
+        data = initData(text);
+        int totalPage = data.size() / 20 ;
+        totalPage += totalPage%20 == 0 ? 0 : 1;
+        pagination.setPageCount(totalPage==0?1:totalPage);
+        pagination.setMaxPageIndicatorCount(totalPage < 3 ? totalPage+1 : 3);
+        pagination.setPageFactory(this::createPage);
     }
 
 
@@ -148,9 +193,9 @@ public class UserWindowController implements Serializable, Initializable {
                bookModel.setBookId(currentId);
                Boolean bool = new BookService().update(bookModel);
                if(bool){
-                   AlertBox.display("Notification", "This book is updated");
+                   AlertBox.display("Notification", "This book is updated!");
                }else {
-                   AlertBox.display("Warning", "Upload is not succeed");
+                   AlertBox.display("Warning", "Upload is not succeed!");
                }
            }else{
                Boolean bool = new BookService().save(bookModel);
@@ -207,8 +252,8 @@ public class UserWindowController implements Serializable, Initializable {
         data = initData(text);
         int totalPage = data.size() / 20 ;
         totalPage += totalPage%20 == 0 ? 0 : 1;
-        pagination.setPageCount(totalPage);
-        pagination.setMaxPageIndicatorCount(3);
+        pagination.setPageCount(totalPage==0?1:totalPage);
+        pagination.setMaxPageIndicatorCount(totalPage < 3 ? totalPage+1 : 3);
         pagination.setPageFactory(this::createPage);
     }
 
@@ -216,6 +261,7 @@ public class UserWindowController implements Serializable, Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         data = initData("");
         if(!UserSession.getInstance().getUser().getRole()){
+            choiceCombobox.setVisible(false);
             titleField.setDisable(true);
             titleField.setStyle("-fx-opacity: 1;");
             authorField.setDisable(true);
@@ -234,13 +280,14 @@ public class UserWindowController implements Serializable, Initializable {
             clearBtn.setVisible(false);
             welcomLabel.setText("Welcome " + UserSession.getInstance().getUser().getUsername().toUpperCase());
         }else{
+            choiceCombobox.getItems().addAll("Available","Deleted");
             welcomLabel.setText("Welcome ADMIN");
             myBookCaseBtn.setVisible(false);
         }
         int totalPage = data.size() / 20 ;
         totalPage += totalPage%20 == 0 ? 0 : 1;
-        pagination.setPageCount(totalPage);
-        pagination.setMaxPageIndicatorCount(3);
+        pagination.setPageCount(totalPage==0?1:totalPage);
+        pagination.setMaxPageIndicatorCount(totalPage < 3 ? totalPage+1 : 3);
         pagination.setPageFactory(this::createPage);
 
         tableListBook.setRowFactory(tv -> {
@@ -309,9 +356,17 @@ public class UserWindowController implements Serializable, Initializable {
     private List<BookModel> initData(String text){
         List<BookModel> list;
         if("".equals(text)){
-            list = new BookService().findBookAll();
+            if(deletedBool){
+                list = new BookService().findBookAllDeleted();
+            }else {
+                list = new BookService().findBookAll();
+            }
         }else {
-            list = new BookService().search(text);
+            if(deletedBool){
+                list = new BookService().searchBookDeleted(text);
+            }else {
+                list = new BookService().search(text);
+            }
         }
         return convertToRowModel(list);
     }

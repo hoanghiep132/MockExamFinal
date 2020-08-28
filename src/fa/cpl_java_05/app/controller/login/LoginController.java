@@ -38,25 +38,27 @@ public class LoginController implements Serializable {
     public void submit(ActionEvent actionEvent){
         String username = usernameTextField.getText();
         String password = passwordField.getText();
-        UserModel userModel = new UserService().findByUserNameAndPassWord(username,password);
-        if(userModel != null){
-            UserSession.setInstance(userModel);
-            Parent root;
-            try {
-                root =  FXMLLoader.load(getClass().getResource("/fa/cpl_java_05/app/views/main_window/user/user_window.fxml"));
-                Scene scene = new Scene(root);
-                Main.mainStage.close();
-                Main.mainStage.setScene(scene);
-                Main.mainStage.show();
-
-                // Hide this current window (if this is what you want)
-                //((Node)(actionEvent.getSource())).getScene().getWindow().hide();
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
+        if(password.length() < 6 || password.length() > 16){
+            AlertBox.display("Warning","Password length must be between 6 an 18 character");
         }else {
-            AlertBox.display("Warning","Incorrect username or password");
+            UserModel userModel = new UserService().findByUserNameAndPassWord(username,password);
+            if(userModel != null){
+                UserSession.setInstance(userModel);
+                Parent root;
+                try {
+                    root =  FXMLLoader.load(getClass().getResource("/fa/cpl_java_05/app/views/main_window/user/user_window.fxml"));
+                    Scene scene = new Scene(root);
+                    Main.mainStage.close();
+                    Main.mainStage.setScene(scene);
+                    Main.mainStage.show();
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }else {
+                AlertBox.display("Warning","Incorrect username or password");
+            }
         }
+
     }
 }

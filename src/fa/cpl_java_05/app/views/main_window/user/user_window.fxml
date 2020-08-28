@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Pagination?>
 <?import javafx.scene.control.TextArea?>
@@ -17,6 +18,7 @@
             <Label fx:id="welcomLabel" layoutX="14.0" layoutY="20.0" prefHeight="50.0" prefWidth="400.0" AnchorPane.topAnchor="10.0" />
             <Button fx:id="myBookCaseBtn" layoutX="800.0" layoutY="21.0" mnemonicParsing="false" onAction="#openBookCase" prefHeight="50.0" prefWidth="150.0" text="MY BOOK CASE" AnchorPane.topAnchor="20.0" />
             <Button fx:id="logoutBtn" layoutX="1021.0" layoutY="21.0" mnemonicParsing="false" onAction="#logout" prefHeight="50.0" prefWidth="150.0" text="LOG OUT" AnchorPane.topAnchor="20.0" />
+            <ComboBox fx:id="choiceCombobox" layoutX="609.0" layoutY="80.0" onAction="#choice" prefHeight="50.0" prefWidth="150.0" promptText="Available" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="649.0" layoutY="6.0" prefHeight="720.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">

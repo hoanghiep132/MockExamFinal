@@ -163,8 +163,8 @@ public class MyBookCaseController implements Serializable, Initializable {
         String text = searchField.getText();
         data = initData(text);
         int totalPage = data.size() / 20 ;
-        pagination.setPageCount(totalPage);
-        pagination.setMaxPageIndicatorCount(3);
+        pagination.setPageCount(totalPage==0?1:totalPage);
+        pagination.setMaxPageIndicatorCount(totalPage < 3 ? totalPage+1 : 3);
         pagination.setPageFactory(this::createPage);
     }
 
@@ -197,8 +197,8 @@ public class MyBookCaseController implements Serializable, Initializable {
 
 
         int totalPage = data.size() / 20 ;
-        pagination.setPageCount(totalPage);
-        pagination.setMaxPageIndicatorCount(3);
+        pagination.setPageCount(totalPage==0?1:totalPage);
+        pagination.setMaxPageIndicatorCount(totalPage < 3 ? totalPage+1 : 3);
         pagination.setPageFactory(this::createPage);
         tableListBook.setRowFactory(tv -> {
             TableRow<BookModel> row = new TableRow<>();
