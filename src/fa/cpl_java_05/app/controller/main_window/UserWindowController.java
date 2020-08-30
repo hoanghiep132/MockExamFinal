@@ -1,9 +1,8 @@
-package fa.cpl_java_05.app.controller.main_window.user;
+package fa.cpl_java_05.app.controller.main_window;
 
 import fa.cpl_java_05.app.main.Main;
 import fa.cpl_java_05.app.views.common.AlertBox;
 import fa.cpl_java_05.model.book.BookModel;
-import fa.cpl_java_05.model.book.ContainModel;
 import fa.cpl_java_05.service.book.BookCaseService;
 import fa.cpl_java_05.service.book.BookService;
 import fa.cpl_java_05.service.book.ContainService;
@@ -18,7 +17,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.stage.Stage;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -52,7 +50,6 @@ public class UserWindowController implements Serializable, Initializable {
     @FXML
     private Button myBookCaseBtn;
 
-
     @FXML
     private Button saveBtn;
 
@@ -83,14 +80,11 @@ public class UserWindowController implements Serializable, Initializable {
     @FXML
     private ComboBox<String> choiceCombobox;
 
-
-
-
     @FXML
     void openBookCase(ActionEvent event){
         Parent root;
         try{
-            root = FXMLLoader.load(getClass().getResource("/fa/cpl_java_05/app/views/main_window/user/my_book_case/my_book_case.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fa/cpl_java_05/app/views/main_window/my_book_case.fxml"));
             Scene scene = new Scene(root);
             Main.mainStage.close();
             Main.mainStage.setScene(scene);
@@ -164,6 +158,12 @@ public class UserWindowController implements Serializable, Initializable {
             contentArea.setStyle("-fx-opacity: 1;");
         }else {
             deletedBool = false;
+            titleField.setDisable(false);
+            authorField.setDisable(false);
+            pubField.setDisable(false);
+            catgoField.setDisable(false);
+            briefField.setDisable(false);
+            contentArea.setDisable(false);
             deleteBtn.setDisable(false);
             saveBtn.setDisable(false);
             clearBtn.setDisable(false);
@@ -216,7 +216,17 @@ public class UserWindowController implements Serializable, Initializable {
            }else if(bool == null){
                AlertBox.display("Danger", "Server Internal Error");
            }else {
-               AlertBox.display("Warning", "This book is exist in book case");
+               Boolean bool2 = new ContainService().findContainDeleted(bookCaseID,bookId);
+               if(bool2){
+                   Boolean bool3 = new ContainService().changeDeleted(bookCaseID,bookId);
+                   if(bool3){
+                       AlertBox.display("Success","This book is added to your book case");
+                   }else{
+                       AlertBox.display("Warning", "This book is exist in book case");
+                   }
+               }else {
+                   AlertBox.display("Warning", "This book is exist in book case");
+               }
 
            }
        }
@@ -296,7 +306,11 @@ public class UserWindowController implements Serializable, Initializable {
                 if(e.getClickCount() == 1 && (!row.isEmpty())){
                     BookModel bookModel = row.getItem();
                     currentId = bookModel.getBookId();
-                    saveBtn.setDisable(false);
+                    if(deletedBool){
+                        saveBtn.setDisable(true);
+                    }else{
+                        saveBtn.setDisable(false);
+                    }
                     titleField.setText(bookModel.getBookTitle());
                     authorField.setText(bookModel.getAuthor());
                     pubField.setText(bookModel.getPublisher());

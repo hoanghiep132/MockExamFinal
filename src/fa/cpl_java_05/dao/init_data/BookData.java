@@ -3,16 +3,12 @@ package fa.cpl_java_05.dao.init_data;
 
 
 import com.google.gson.*;
-import fa.cpl_java_05.dao.IMPL.ContainDAO;
 import fa.cpl_java_05.model.book.BookModel;
 import fa.cpl_java_05.service.book.BookService;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.util.Date;
 import java.util.Random;
 
 public class BookData {

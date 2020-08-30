@@ -63,7 +63,31 @@ public class ContainDAO extends AbstractDAO<ContainModel> implements IContainDAO
         return list;
     }
 
+    public int changeDeleted(int bookCaseId, int bookId){
+        String sql = "update Contain set deleted = 0 where " +
+                " book_case_id = ? and book_id = ?";
+        try{
+            update(sql,bookCaseId,bookId );
+            return 1;
+        }catch (Exception ex){
+            return -1;
+        }
+    }
 
+    public Boolean findContainDeleted(int bookCaseId, int bookId){
+        String sql = "select * from Contain where " +
+                "book_case_id = ? and book_id = ? and deleted = true";
+        try{
+            List<ContainModel> containModels = query(sql,new ContainMapper(),bookCaseId,bookId);
+            if(containModels.isEmpty()){
+                return false;
+            }else {
+                return true;
+            }
+        }catch (Exception ex){
+            return null;
+        }
+    }
 
     @Override
     public int save(int bookCaseId, int bookId, Date date) {

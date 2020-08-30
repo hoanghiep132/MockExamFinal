@@ -35,7 +35,7 @@ public class ContainService {
         }
     }
 
-        public Boolean save(int bookCaseId, int bookId, Date date){
+    public Boolean save(int bookCaseId, int bookId, Date date){
         try{
             return containDAO.save(bookCaseId,bookId,date) == 0 ? true : false;
         }catch (Exception ex){
@@ -50,6 +50,24 @@ public class ContainService {
         }catch (Exception ex){
             LOGGER.log(Level.SEVERE,"delete-error");
             return false;
+        }
+    }
+
+    public Boolean changeDeleted(int bookCaseId, int bookId){
+        try{
+            return containDAO.changeDeleted(bookCaseId,bookId) > 0 ? true : false;
+        }catch (Exception ex){
+            LOGGER.log(Level.SEVERE,"restore-book-error : " + ex);
+            return null;
+        }
+    }
+
+    public Boolean findContainDeleted(int bookCaseId, int bookId){
+        try{
+            return containDAO.findContainDeleted(bookCaseId,bookId);
+        }catch (Exception ex){
+            LOGGER.log(Level.SEVERE,"find-contain-deleted-error : " + ex);
+            return null;
         }
     }
 }

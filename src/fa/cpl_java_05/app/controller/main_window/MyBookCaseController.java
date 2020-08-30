@@ -1,4 +1,4 @@
-package fa.cpl_java_05.app.controller.main_window.user;
+package fa.cpl_java_05.app.controller.main_window;
 
 import fa.cpl_java_05.app.main.Main;
 import fa.cpl_java_05.app.views.common.AlertBox;
@@ -89,6 +89,7 @@ public class MyBookCaseController implements Serializable, Initializable {
                 welcomfield.setText(bookCase.getBook_case_name());
             }
             welcomfield.setDisable(true);
+            editBool = true;
             editBtn.setText("Edit");
         }
     }
@@ -97,7 +98,7 @@ public class MyBookCaseController implements Serializable, Initializable {
     void back(ActionEvent event) {
         Parent root;
         try{
-            root = FXMLLoader.load(getClass().getResource("/fa/cpl_java_05/app/views/main_window/user/user_window.fxml"));
+            root = FXMLLoader.load(getClass().getResource("/fa/cpl_java_05/app/views/main_window/user_window.fxml"));
             Scene scene = new Scene(root);
             Main.mainStage.close();
             Main.mainStage.setScene(scene);

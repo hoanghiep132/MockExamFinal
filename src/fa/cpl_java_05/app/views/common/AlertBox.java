@@ -5,6 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -17,11 +18,14 @@ public class AlertBox {
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle(title);
         window.setHeight(200);
-        window.setWidth(500);
+        window.setWidth(600);
 
         Label label = new Label();
         label.setText(message);
-        label.setFont(new Font("Arial", 22));
+        label.setFont(new Font("Arial", 20));
+        if("Warning".equals(title)){
+            label.setTextFill(Color.web("#ff0000", 0.8));
+        }
 
         Button btn = new Button("OK");
         btn.setOnAction(e -> window.close());
